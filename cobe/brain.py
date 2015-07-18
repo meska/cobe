@@ -225,31 +225,34 @@ with its two nodes"""
 
         _start = time.time()
         for edges, pivot_node in self._generate_replies(pivot_set):
-            reply = Reply(self.graph, tokens, input_ids, pivot_node, edges)
-
-            if max_len and self._too_long(max_len, reply):
-                continue
-
-            key = reply.edge_ids
-            if key not in score_cache:
-                with trace_us("Brain.evaluate_reply_us"):
-                    score = self.scorer.score(reply)
-                    score_cache[key] = score
-            else:
-                # skip scoring, we've already seen this reply
-                score = -1
-
-            if score > best_score:
-                best_reply = reply
-                best_score = score
-
-            # dump all replies to the console if debugging is enabled
-            if log.isEnabledFor(logging.DEBUG):
-                all_replies.append((score, reply))
-
-            count += 1
-            if time.time() > end:
-                break
+            try:
+                reply = Reply(self.graph, tokens, input_ids, pivot_node, edges)
+    
+                if max_len and self._too_long(max_len, reply):
+                    continue
+    
+                key = reply.edge_ids
+                if key not in score_cache:
+                    with trace_us("Brain.evaluate_reply_us"):
+                        score = self.scorer.score(reply)
+                        score_cache[key] = score
+                else:
+                    # skip scoring, we've already seen this reply
+                    score = -1
+    
+                if score > best_score:
+                    best_reply = reply
+                    best_score = score
+    
+                # dump all replies to the console if debugging is enabled
+                if log.isEnabledFor(logging.DEBUG):
+                    all_replies.append((score, reply))
+    
+                count += 1
+                if time.time() > end:
+                    break
+            except Exception as e:
+                logging.error(e)
 
         if best_reply is None:
             # we couldn't find any pivot words in _babble(), so we're
@@ -338,7 +341,16 @@ with its two nodes"""
         return set(filtered)
 
     def _pick_pivot(self, pivot_ids):
-        pivot = random.choice(tuple(pivot_ids))
+        # TODO: FIX WHEN PIVOTS EMPTY?
+        j=0
+        while True:
+            pivot = random.choice(tuple(pivot_ids))
+            if type(pivot) is tuple and len(pivot) == 0:
+                if j > 10:
+                    return 0
+                j+=1
+                continue
+            break
 
         if type(pivot) is tuple:
             # the input word was stemmed to several things

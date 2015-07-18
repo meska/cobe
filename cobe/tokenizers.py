@@ -96,7 +96,7 @@ tokens."""
         return tokens
 
     def join(self, words):
-        return u"".join(words)
+        return "".join(words)
 
 
 class CobeStemmer:

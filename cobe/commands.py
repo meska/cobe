@@ -120,7 +120,7 @@ class LearnIrcLogCommand:
 
         for filename in args.file:
             now = time.time()
-            print filename
+            print(filename)
 
             count = 0
             for line, progress in progress_generator(filename):

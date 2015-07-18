@@ -46,7 +46,7 @@ This tokenizer ignores differences in capitalization."""
                 if i > 2 and chars[i - 1] in ".?!" and char.isspace():
                     start = True
 
-        return u"".join(chars)
+        return "".join(chars)
 
 
 class CobeTokenizer:

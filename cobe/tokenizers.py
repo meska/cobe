@@ -14,8 +14,6 @@ to be a token:
 
 This tokenizer ignores differences in capitalization."""
     def split(self, phrase):
-        if type(phrase) != types.UnicodeType:
-            raise TypeError("Input must be Unicode")
 
         if len(phrase) == 0:
             return []
@@ -79,9 +77,6 @@ tokens."""
                                 re.UNICODE)
 
     def split(self, phrase):
-        if type(phrase) != types.UnicodeType:
-            raise TypeError("Input must be Unicode")
-
         # Strip leading and trailing whitespace. This might not be the
         # correct choice long-term, but in the brain it prevents edges
         # from the root node that have has_space set.

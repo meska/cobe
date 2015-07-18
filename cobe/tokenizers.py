@@ -30,7 +30,7 @@ This tokenizer ignores differences in capitalization."""
         """Capitalize the first alpha character in the reply and the
         first alpha character that follows one of [.?!] and a
         space."""
-        chars = list(u"".join(words))
+        chars = list("".join(words))
         start = True
 
         for i in xrange(len(chars)):

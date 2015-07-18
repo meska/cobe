@@ -347,7 +347,7 @@ with its two nodes"""
             pivot = random.choice(tuple(pivot_ids))
             if type(pivot) is tuple and len(pivot) == 0:
                 if j > 10:
-                    return 0
+                    return None
                 j+=1
                 continue
             break
@@ -359,7 +359,7 @@ with its two nodes"""
         return pivot
 
     def _generate_replies(self, pivot_ids):
-        if not pivot_ids:
+        if not pivot_ids or pivot_ids == {()}:
             return
 
         end = self._end_context_id
@@ -376,6 +376,8 @@ with its two nodes"""
         while pivot_ids:
             # generate a reply containing one of token_ids
             pivot_id = self._pick_pivot(pivot_ids)
+            if not pivot_id:
+                continue
             node = graph.get_random_node_with_token(pivot_id)
 
             parts = itertools.zip_longest(search(node, end, 1),
@@ -527,7 +529,8 @@ class Graph:
         if len(seq) == 1:
             # Grab the first item from seq. Use an iterator so this works
             # with sets as well as lists.
-            return "(%s)" % iter(seq).next()
+            #return "(%s)" % iter(seq).next()
+            return "(%s)" % seq.pop()
 
         return str(tuple(seq))
 

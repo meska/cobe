@@ -205,7 +205,7 @@ with its two nodes"""
 
         # If we didn't recognize any word tokens in the input, pick
         # something random from the database and babble.
-        if len(pivot_set) == 0:
+        if len(pivot_set) == 0 or pivot_set == {()}:
             pivot_set = self._babble()
 
         score_cache = {}
